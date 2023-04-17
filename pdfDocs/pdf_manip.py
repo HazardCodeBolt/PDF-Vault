@@ -15,7 +15,7 @@ class PdfDocManip:
         with open(pdf_path, 'rb') as f:
             self.pdf = PdfReader(f)
             self.number_of_pages = len(self.pdf.pages)
-            self.file_name = self.pdf.metadata.title
+            self.file_name = pdf_path.split('\\')[-1]
             self.text_content = ''
             for i in range(self.number_of_pages):
                 page = self.pdf.pages[i]
@@ -57,8 +57,3 @@ class PdfDocManip:
             freq_dict[word] = count
 
         return freq_dict
-
-    def upload_pdf():
-        pass
-
-

@@ -1,1 +1,3 @@
 .env
+pdfDocs/images/*
+pdfs/pdfs/*

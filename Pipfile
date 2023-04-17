@@ -8,6 +8,9 @@ django = ">=4.0.0,<=4.1.0"
 djangorestframework = "*"
 django-cors-headers = "*"
 python-dotenv = "*"
+pdf2image = "*"
+pypdf2 = "*"
+nltk = "*"
 
 [dev-packages]
 

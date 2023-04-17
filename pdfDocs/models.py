@@ -1,9 +1,13 @@
 from django.db import models
+from .pdf_manip import PdfDocManip
 from django.contrib.auth.models import User
 
+class FileUpload(models.Model):
+    file            = models.FileField(upload_to='pdfs/')
+    user            = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class PdfDocument(models.Model):
-    user            = models.ForeignKey(User, on_delete=models.CASCADE)
+    pdfFile_id      = models.ForeignKey(FileUpload, on_delete=models.CASCADE)
     fileName        = models.CharField(max_length=120)
     pdfLink         = models.CharField(max_length=250)
     pagesNo         = models.IntegerField()
@@ -15,7 +19,6 @@ class PdfDocument(models.Model):
 class Sentence(models.Model):
     pdfID           = models.ForeignKey(PdfDocument, on_delete=models.CASCADE)
     sentenceText    = models.CharField(max_length=1000)
-    pageNumber      = models.IntegerField()
 
 
 
