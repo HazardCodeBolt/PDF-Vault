@@ -6,6 +6,10 @@ class FileUpload(models.Model):
     file            = models.FileField(upload_to='pdfs/')
     user            = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def delete(self, *args, **kwargs):
+        self.file.delete()
+        super().delete(*args, **kwargs)
+
 class PdfDocument(models.Model):
     pdfFile_id      = models.ForeignKey(FileUpload, on_delete=models.CASCADE)
     fileName        = models.CharField(max_length=120)

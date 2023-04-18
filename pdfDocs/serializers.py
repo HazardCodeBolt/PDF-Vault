@@ -73,9 +73,8 @@ class PdfDocumentSerializer(serializers.ModelSerializer):
     class Meta: 
         model = PdfDocument
         fields = [
-            'user',
+            'id',
             'fileName',
-            'pdfLink',
             'pagesNo',
             'fileSizeKB',
             'uploadDateTime',
@@ -86,9 +85,7 @@ class SentenceSerializer(serializers.ModelSerializer):
     class Meta: 
         model = Sentence
         fields = [
-            'pdfID',   
             'sentenceText',
-            'pageNumber',
         ]
 
 
