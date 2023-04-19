@@ -11,6 +11,7 @@ python-dotenv = "*"
 pdf2image = "*"
 pypdf2 = "*"
 nltk = "*"
+pillow = "*"
 
 [dev-packages]
 

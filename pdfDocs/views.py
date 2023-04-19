@@ -3,15 +3,14 @@ UserSerializer, PdfDocumentSerializer,
 SentenceSerializer, WordSerializer, FileUploadSerializer
 )
 
-from rest_framework import generics, permissions, authentication, views, parsers, response
+from rest_framework import generics, permissions, authentication, views, parsers, response, status
 from rest_framework import response
 from django.contrib.auth import get_user_model
 from .models import FileUpload, PdfDocument, Word, Sentence
 from django.http import FileResponse
 from string import punctuation
-
-
-
+from .pdf_manip import PdfDocManip
+from django.shortcuts import get_object_or_404
 class CreateUserView(generics.CreateAPIView):
     model = get_user_model()
     permission_classes = [permissions.AllowAny]
@@ -196,4 +195,33 @@ class GetPageAsImageView(views.APIView):
     ]
 
     def get(self, request, id, pageNo, *args, **kwargs):
-        return 
+
+        file = PdfDocument.objects.get(id=id).pdfFile_id.file
+        pdf_path = file.path
+        doc_manip = PdfDocManip(pdf_path=pdf_path)
+        image_path = doc_manip.get_page_as_image(page_num=pageNo).replace('/', '\\')
+        print(image_path)
+        
+        file = open(image_path, 'rb')     
+        fileresponse = FileResponse(file)
+        fileresponse['Content-Disposition'] = f'attachment; filename="pdf-{id}-page-{pageNo}.jpeg"'
+        fileresponse['Content-Type'] = 'image/jpeg'
+        return fileresponse
+    
+
+
+class PdfDeleteView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication,
+    ]
+
+    def delete(self, request, id, *args, **kwargs):
+        pdf = get_object_or_404(PdfDocument, pk=id)
+        pdf.pdfFile_id.delete()
+        pdf.delete()
+        return response.Response(
+            {'detail': 'Successfully deleted the PDF'},
+            status=status.HTTP_204_NO_CONTENT
+        )

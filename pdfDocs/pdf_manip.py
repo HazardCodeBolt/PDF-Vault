@@ -5,6 +5,7 @@ import math
 import pdf2image
 # from io import BytesIO
 from PyPDF2 import PdfReader
+from django.conf import settings
 nltk.download('punkt')
 
 class PdfDocManip:
@@ -38,15 +39,19 @@ class PdfDocManip:
 
 
     def get_page_as_image(self,page_num):
+        poppler_path = os.path.join(settings.BASE_DIR, 'pdfDocs\\poppler-0.68.0\\bin')
         pages = pdf2image.convert_from_path(
             self.pdf_path,
             first_page=page_num, 
             last_page=page_num,
-            poppler_path=r'./poppler-0.68.0/bin'
+            poppler_path=poppler_path
             )
+        
         time_now = time.strftime("%Y%m%d-%H%M%S")
-        pages[0].save(fr'./images/{time_now}.jpg', 'JPEG')
-            
+        image_path = os.path.join(settings.BASE_DIR, f'pdfDocs/images/{time_now}.jpg')
+        pages[0].save(image_path, 'JPEG')
+        return image_path
+        
 
     def get_words_count(self,):
         words = nltk.word_tokenize(self.text_content)
