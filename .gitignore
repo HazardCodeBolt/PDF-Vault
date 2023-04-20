@@ -1,3 +1,4 @@
-.env
+# commented only for the purpose of installation ease
+# .env
 pdfDocs/images/*
 pdfs/pdfs/*
